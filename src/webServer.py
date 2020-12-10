@@ -3,14 +3,40 @@
 # http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming
 
 import io
+import os
 import logging
 import socketserver
 from threading import Condition
 from http import server
+from urllib.parse import urlparse
 
 homepageFile = open("web/index.html")
 homepage = homepageFile.read()
 homepageFile.close()
+
+styleFile = open("web/style.css")
+style = styleFile.read()
+styleFile.close()
+
+def parsePost(post_body):
+    post_body = post_body.decode('UTF-8')
+    queries = post_body.split('&')
+    request = {}
+    for query in queries:
+        querySplit = query.split('=')
+        request[querySplit[0]] = querySplit[1]
+    return request
+
+def getImage(n):
+    path = camera.getStillsDir()
+    images = os.listdir(path)
+    images = [f.lower() for f in images]
+    sortedImages = sorted(images)
+    sortedImages.reverse()
+    imageFile = open(path + os.sep + sortedImages[n], 'rb')
+    image = imageFile.read()
+    imageFile.close()
+    return image
 
 class StreamingOutput(object):
     def __init__(self):
@@ -31,18 +57,41 @@ class StreamingOutput(object):
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/':
+        print(urlparse(self.path))
+        parsedPath = urlparse(self.path)
+        if parsedPath.path == '/':
             self.send_response(301)
             self.send_header('Location', '/index.html')
             self.end_headers()
-        elif self.path == '/index.html':
+        elif parsedPath.path == '/index.html':
             content = homepage.encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.send_header('Content-Length', len(content))
             self.end_headers()
             self.wfile.write(content)
-        elif self.path == '/stream.mjpg':
+            if parsedPath.query == "snap=do":
+                camera.snapPhoto()
+        elif parsedPath.path == '/style.css':
+            content = style.encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/css')
+            self.send_header('Content-Length', len(content))
+            self.end_headers()
+            self.wfile.write(content)
+        elif parsedPath.path.startswith("/images"):
+            pathSplit = parsedPath.path.split('/')
+            pathSplitLen = len(pathSplit)
+            try:
+                n = int(pathSplit[pathSplitLen-1])
+                image = getImage(n)
+                self.send_response(200)
+                self.send_header('Content-Type', 'image/jpg')
+                self.end_headers()
+                self.wfile.write(image)
+            except:
+                print("Cannot access image.")
+        elif parsedPath.path == '/stream.mjpg':
             self.send_response(200)
             self.send_header('Age', 0)
             self.send_header('Cache-Control', 'no-cache, private')
@@ -71,8 +120,9 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_POST(self):
         content_len = int(self.headers.get('Content-Length', 0)) # 0 is default value
         post_body = self.rfile.read(content_len)
-        print(post_body)
-        camera.snapPhoto()
+        request = parsePost(post_body)
+        if "snap" in request:
+            camera.snapPhoto()
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True

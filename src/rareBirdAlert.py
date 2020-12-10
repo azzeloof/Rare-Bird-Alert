@@ -3,9 +3,10 @@ from camera import Camera
 
 def rareBirdAlert():
     stillsPath = "/home/pi/stills"
-    camera = Camera(resolution='1280x720', framerate=24, path=stillsPath)
+    camera = Camera(resolution='1600x1200', framerate=24, path=stillsPath) # max '4056x3040'
+    # high resolution and framerate required increasing pi GPU memory
     output = StreamingOutput()
-    camera.startRecording(output, 'mjpeg')
+    camera.startRecording(output, (800, 600), 'mjpeg')
     try:
         initServer(output, camera)
     except:

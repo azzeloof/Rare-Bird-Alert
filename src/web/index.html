@@ -9,20 +9,56 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+        <link rel="stylesheet" href="/style.css">
+        <script>
+            function submitSnap() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "/index.html", true)
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("snap=do");
+                return false;
+            };
+        </script>
+        <link  href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
     </head>
     <body>
         
         <div class="container">
             <h1 class="text-center">Rare Bird Alert</h1>
-            <img class="text-center" src="stream.mjpg" width="1280" height="720">
-            <form class="text-center" method="POST" action="/snap">
-                <button type="submit" class="btn btn-outline-primary text-center">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-camera-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
-                        <path fill-rule="evenodd" d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
-                    </svg>
-                </button>
-            </form>
+            <div class="row">
+                <div class="col text-center">
+                    <img class="text-center" src="stream.mjpg" width="800" height="600">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <form class="controls text-center" onsubmit="return submitSnap()">
+                        <button type="submit" name="snap" value="do" class="btn btn-outline-primary text-center">
+                            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-camera-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                <path fill-rule="evenodd" d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <h2 class="text-center">Archive</h2>
+                <!-- Add images to <div class="fotorama"></div> -->
+                <div class="fotorama text-center" data-nav="thumbs">
+                    <img src="/images/0">
+                    <img src="/images/1">
+                    <img src="/images/2">
+                    <img src="/images/3">
+                    <img src="/images/4">
+                    <img src="/images/5">
+                    <img src="/images/6">
+                    <img src="/images/7">
+                    <img src="/images/8">
+                    <img src="/images/9">
+                </div>
+            </div>
         </div>
     </body>
 </html>
