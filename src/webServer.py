@@ -1,3 +1,7 @@
+# Web streaming example
+# Source code from the official PiCamera package
+# http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming
+
 import io
 import logging
 import socketserver
@@ -64,14 +68,22 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_error(404)
             self.end_headers()
 
+    def do_POST(self):
+        content_len = int(self.headers.get('Content-Length', 0)) # 0 is default value
+        post_body = self.rfile.read(content_len)
+        print(post_body)
+        camera.snapPhoto()
+
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
 
-def initServer(videoStreamInput):
+def initServer(videoStreamInput, cameraInput):
     global videoStream
+    global camera
     videoStream = videoStreamInput
+    camera = cameraInput
     address = ('', 8000)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()

@@ -1,19 +1,18 @@
-# Web streaming example
-# Source code from the official PiCamera package
-# http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming
-
-import picamera
 from webServer import StreamingOutput, StreamingServer, StreamingHandler, initServer
-
+from camera import Camera
 
 def rareBirdAlert():
-    camera = picamera.PiCamera(resolution='1280x720', framerate=24)
+    stillsPath = "/home/pi/stills"
+    camera = Camera(resolution='1280x720', framerate=24, path=stillsPath)
     output = StreamingOutput()
-    camera.start_recording(output, format='mjpeg')
+    camera.startRecording(output, 'mjpeg')
     try:
-        initServer(output)
+        initServer(output, camera)
+    except:
+        print("Web server could not be started")
     finally:
-        camera.stop_recording()
+        camera.stopRecording()
 
 if __name__ == "__main__":
     rareBirdAlert()
+    
