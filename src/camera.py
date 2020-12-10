@@ -8,8 +8,6 @@ class Camera():
         self.framerate = framerate
         self.camera = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate)
         self.path = path
-        self.output = None
-        self.encoding = None
 
     def setResolution(self, resolution):
         self.resolution = resolution
@@ -27,25 +25,14 @@ class Camera():
         self.path = path
 
     def snapPhoto(self):
-        # hopefully this runs at full resolution
-        # will cause dropped frames while the resoluion switch happens
-        # I think we can get rid of the resolution switch by enabling use_video_port=True
         timestr = time.strftime("%Y%m%d-%H%M%S")
-        #self.stopRecording()
-        #self.camera.framerate = 1
-        #self.camera.resolution = (1920, 1080)
         self.camera.capture(self.path + os.sep + timestr + "-bird.jpg", use_video_port=False)
-        #self.camera.resolution = self.resolution
-        #self.camera.framerate = self.framerate
-        #self.startRecording(self.output, self.encoding)
 
-    def startRecording(self, output, resolution, encoding):
-        self.output = output
-        self.encoding = encoding
-        self.camera.start_recording(self.output, resize=resolution, format=self.encoding)
+    def startRecording(self, output, resolution, encoding, splitter_port=1, motion_output=None):
+        self.camera.start_recording(output, resize=resolution, format=encoding, splitter_port=splitter_port, motion_output=motion_output)
 
-    def stopRecording(self):
-        self.camera.stop_recording()
+    def stopRecording(self, splitter_port=1):
+        self.camera.stop_recording(splitter_port=splitter_port)
 
     def getStillsDir(self):
         return self.path

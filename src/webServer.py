@@ -57,7 +57,7 @@ class StreamingOutput(object):
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
-        print(urlparse(self.path))
+        #print(urlparse(self.path))
         parsedPath = urlparse(self.path)
         if parsedPath.path == '/':
             self.send_response(301)
