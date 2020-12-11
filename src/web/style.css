@@ -6,6 +6,12 @@ body {
     background-color: #FFF;
 }
 
-.container {
-    background-color: #cecece;
+#stream {
+    background-color: #a0a0a0;
+    border: 5px solid #5c0086;
+    margin-top: 50px;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #5c0086;
 }

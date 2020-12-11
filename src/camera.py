@@ -2,12 +2,15 @@ import os
 import picamera
 import time
 
-class Camera():
+class CameraController():
     def __init__(self, resolution, framerate, path):
         self.resolution = resolution
         self.framerate = framerate
         self.camera = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate)
         self.path = path
+
+    def getCamera(self):
+        return self.camera
 
     def setResolution(self, resolution):
         self.resolution = resolution

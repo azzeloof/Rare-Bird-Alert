@@ -10,13 +10,7 @@ from threading import Condition
 from http import server
 from urllib.parse import urlparse
 
-homepageFile = open("web/index.html")
-homepage = homepageFile.read()
-homepageFile.close()
-
-styleFile = open("web/style.css")
-style = styleFile.read()
-styleFile.close()
+webDir = "web"
 
 def parsePost(post_body):
     post_body = post_body.decode('UTF-8')
@@ -28,7 +22,7 @@ def parsePost(post_body):
     return request
 
 def getImage(n):
-    path = camera.getStillsDir()
+    path = cameraController.getStillsDir()
     images = os.listdir(path)
     images = [f.lower() for f in images]
     sortedImages = sorted(images)
@@ -63,22 +57,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_response(301)
             self.send_header('Location', '/index.html')
             self.end_headers()
-        elif parsedPath.path == '/index.html':
-            content = homepage.encode('utf-8')
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/html')
-            self.send_header('Content-Length', len(content))
-            self.end_headers()
-            self.wfile.write(content)
-            if parsedPath.query == "snap=do":
-                camera.snapPhoto()
-        elif parsedPath.path == '/style.css':
-            content = style.encode('utf-8')
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/css')
-            self.send_header('Content-Length', len(content))
-            self.end_headers()
-            self.wfile.write(content)
         elif parsedPath.path.startswith("/images"):
             pathSplit = parsedPath.path.split('/')
             pathSplitLen = len(pathSplit)
@@ -114,26 +92,68 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     'Removed streaming client %s: %s',
                     self.client_address, str(e))
         else:
-            self.send_error(404)
-            self.end_headers()
+            filePath = webDir + parsedPath.path
+            print(filePath)
+            try:
+                if parsedPath.path.endswith(".html"):
+                    requestedFile = open(filePath, 'r')
+                    requestedData = requestedFile.read()
+                    requestedFile.close()
+                    content = requestedData.encode('utf-8')
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'text/html')
+                    self.send_header('Content-Length', len(content))
+                    self.end_headers()
+                    self.wfile.write(content)
+                elif parsedPath.path.endswith(".css"):
+                    requestedFile = open(filePath, 'r')
+                    requestedData = requestedFile.read()
+                    requestedFile.close()
+                    content = requestedData.encode('utf-8')
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'text/css')
+                    self.send_header('Content-Length', len(content))
+                    self.end_headers()
+                    self.wfile.write(content)
+                elif parsedPath.path.endswith(".jpg"):
+                    requestedFile = open(filePath, 'rb')
+                    requestedData = requestedFile.read()
+                    requestedFile.close()
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'image/jpg')
+                    self.end_headers()
+                    self.wfile.write(requestedData)
+                elif parsedPath.path.endswith(".png") or parsedPath.path.endswith(".ico"):
+                    requestedFile = open(filePath, 'rb')
+                    requestedData = requestedFile.read()
+                    requestedFile.close()
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'image/png')
+                    self.end_headers()
+                    self.wfile.write(requestedData)
+                else:
+                    self.send_error(404)
+                    self.end_headers()
+            except:
+                self.send_error(404)
+                self.end_headers()
 
     def do_POST(self):
         content_len = int(self.headers.get('Content-Length', 0)) # 0 is default value
         post_body = self.rfile.read(content_len)
         request = parsePost(post_body)
         if "snap" in request:
-            camera.snapPhoto()
+            cameraController.snapPhoto()
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-
 def initServer(videoStreamInput, cameraInput):
     global videoStream
-    global camera
+    global cameraController
     videoStream = videoStreamInput
-    camera = cameraInput
+    cameraController = cameraInput
     address = ('', 8000)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()
