@@ -142,8 +142,15 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         content_len = int(self.headers.get('Content-Length', 0)) # 0 is default value
         post_body = self.rfile.read(content_len)
         request = parsePost(post_body)
+        print(request)
         if "snap" in request:
             cameraController.snapPhoto()
+        if "toggleMotion" in request:
+            if request["toggleMotion"] == "true":
+                cameraController.setTriggering(True)
+            else:
+                cameraController.setTriggering(False)
+
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True

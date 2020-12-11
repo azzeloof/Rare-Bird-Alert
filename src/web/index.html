@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Test</title>
+        <title>Rare Bird Alert</title>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <!-- jQuery library -->
@@ -10,12 +10,23 @@
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
         <link rel="stylesheet" href="style.css">
+        <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
         <script>
             function submitSnap() {
                 var xhttp = new XMLHttpRequest();
                 xhttp.open("POST", "/index.html", true)
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send("snap=do");
+                return false;
+            };
+            function toggleTriggering() {
+                var xhttp = new XMLHttpRequest();
+                var val = document.getElementById("toggleMotion").checked
+                console.log(val)
+                xhttp.open("POST", "/index.html", true)
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("toggleMotion="+val);
                 return false;
             };
         </script>
@@ -27,7 +38,7 @@
             <a class="navbar-brand" href="#">
              <img src="bird.png" alt="Logo" style="width:40px;">
            </a>
-           <h1 style="color:#FFF;">Test</h1>
+           <h1 style="color:#FFF;">Rare Bird Alert</h1>
          </nav> 
         <!---
         <div class="jumbotron text-center">
@@ -51,6 +62,8 @@
                             </svg>
                         </button>
                     </form>
+                    <input type="checkbox" id="toggleMotion3" onclick="toggleTriggering()"" checked data-toggle="toggle" data-size="lg">
+                    <input type="checkbox" id="toggleMotion" onclick="toggleTriggering()">
                 </div>
             </div>
             <div class="row">

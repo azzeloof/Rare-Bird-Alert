@@ -8,6 +8,7 @@ class CameraController():
         self.framerate = framerate
         self.camera = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate)
         self.path = path
+        self.triggering = True
 
     def getCamera(self):
         return self.camera
@@ -39,3 +40,9 @@ class CameraController():
 
     def getStillsDir(self):
         return self.path
+
+    def setTriggering(self, triggering):
+        self.triggering = triggering
+    
+    def getTriggering(self):
+        return self.triggering

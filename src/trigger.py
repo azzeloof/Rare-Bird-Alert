@@ -23,7 +23,8 @@ class MotionDetector(PiMotionAnalysis):
         # If there're more than [sensitivity] vectors with a magnitude greater
         # than [threshold], then say we've detected motion
         t1 = time.time()
-        if ((a > threshold).sum() > sensitivity) and (t1 > self.t0 + self.delay):
+        if ((a > threshold).sum() > sensitivity) and (t1 > self.t0 + self.delay) and self.cameraObj.getTriggering():
             print('Motion detected!')
             self.cameraObj.snapPhoto()
             self.t0 = t1
+            
