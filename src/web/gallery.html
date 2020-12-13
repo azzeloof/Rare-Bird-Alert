@@ -14,16 +14,17 @@
         <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
         <link  href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.6.4/jquery.colorbox-min.js"></script>
         <script>
             function populateGallery() {
                 var gallery = document.getElementById("gallery");
-                for(i=0; i<10; i++){
+                var picsPerPage = 10;
+                for(i=0; i<picsPerPage; i++){
                     gallery.innerHTML += "<img class='gallery-thumb' src=images/" + i + ">";
                 };
+                jQuery('a.gallery').colorbox();
             };
         </script>
-
     </head>
     <body>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -61,12 +62,23 @@
                     <img src="/images/9">
                 </div>
                 -->
-                <div id="gallery">
+                <div id="gallery" class="gallery text-center">
                     <!-- images go here -->
                 </div>
                 <script>
                     populateGallery();
                 </script>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul> 
+                </div>
             </div>
         </div>
     </body>

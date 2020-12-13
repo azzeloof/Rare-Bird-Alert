@@ -17,5 +17,16 @@ h1, h2, h3, h4, h5 {
 }
 
 .gallery-thumb {
-    max-width: 300px;
+    width: 300px;
+    background-color: #a0a0a0;
+    margin: 20px;
+    transition: transform .2s;
+}
+
+.gallery-thumb:hover {
+    transform: scale(1.02);
+}
+
+.gallery {
+    margin: 20px;
 }
