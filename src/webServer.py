@@ -9,6 +9,7 @@ import socketserver
 from threading import Condition
 from http import server
 from urllib.parse import urlparse
+from PIL import Image
 
 webDir = "web"
 
@@ -21,16 +22,24 @@ def parsePost(post_body):
         request[querySplit[0]] = querySplit[1]
     return request
 
-def getImage(n):
+def getImage(n, thumb):
     path = cameraController.getSettings('path')
+    thumbsize = 400, 400
     images = os.listdir(path)
     images = [f.lower() for f in images]
     sortedImages = sorted(images)
     sortedImages.reverse()
     imageFile = open(path + os.sep + sortedImages[n], 'rb')
-    image = imageFile.read()
-    imageFile.close()
-    return image
+    image = Image.open(imageFile)
+    if thumb:
+        image.thumbnail(thumbsize)
+    output = io.BytesIO()
+    image.save(output, "JPEG")
+    return output.getvalue()
+
+def countPics():
+    path = cameraController.getSettings('path')
+    return len([f for f in os.listdir(path)if os.path.isfile(os.path.join(path, f))])
 
 class StreamingOutput(object):
     def __init__(self):
@@ -53,6 +62,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
         #print(urlparse(self.path))
         parsedPath = urlparse(self.path)
+        print(parsedPath)
         if parsedPath.path == '/':
             self.send_response(301)
             self.send_header('Location', '/index.html')
@@ -62,7 +72,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             pathSplitLen = len(pathSplit)
             try:
                 n = int(pathSplit[pathSplitLen-1])
-                image = getImage(n)
+                image = getImage(n, pathSplit[pathSplitLen-2] == "thumbs")
                 self.send_response(200)
                 self.send_header('Content-Type', 'image/jpg')
                 self.end_headers()
@@ -91,6 +101,15 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                 logging.warning(
                     'Removed streaming client %s: %s',
                     self.client_address, str(e))
+        elif parsedPath.query == 'nPics':
+            nPics = countPics()
+            self.send_response(200)
+            content = str(nPics).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html')
+            self.send_header('Content-Length', len(content))
+            self.end_headers()
+            self.wfile.write(content)
         else:
             filePath = webDir + parsedPath.path
             print(filePath)

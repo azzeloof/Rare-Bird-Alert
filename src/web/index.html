@@ -1,5 +1,6 @@
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>Rare Bird Alert</title>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -20,12 +21,19 @@
                 xhttp.send("snap=do");
                 return false;
             };
+            function sendSetting(setting, value) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "/index.html", true)
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(setting + "=" + value);
+                return false;
+            };
         </script>
         <script>
             $(function() {
               $('#toggleMotion').change(function() {
                 //$('#console-event').html('Toggle: ' + $(this).prop('checked'))
-                toggleTriggering()
+                sendSetting('toggleMotion', $(this).prop('checked'))
               });
             });
           </script>
