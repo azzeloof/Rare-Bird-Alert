@@ -20,23 +20,14 @@
                 xhttp.send("snap=do");
                 return false;
             };
-            function toggleTriggering() {
-                var xhttp = new XMLHttpRequest();
-                var val = document.getElementById("toggleMotion").checked
-                console.log(val)
-                xhttp.open("POST", "/index.html", true)
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send("toggleMotion="+val);
-                return false;
-            };
         </script>
         <script>
             $(function() {
               $('#toggleMotion').change(function() {
                 //$('#console-event').html('Toggle: ' + $(this).prop('checked'))
                 toggleTriggering()
-              })
-            })
+              });
+            });
           </script>
         <link  href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>

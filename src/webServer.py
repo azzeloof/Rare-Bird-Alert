@@ -22,7 +22,7 @@ def parsePost(post_body):
     return request
 
 def getImage(n):
-    path = cameraController.getStillsDir()
+    path = cameraController.getSettings('path')
     images = os.listdir(path)
     images = [f.lower() for f in images]
     sortedImages = sorted(images)
@@ -147,9 +147,9 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             cameraController.snapPhoto()
         if "toggleMotion" in request:
             if request["toggleMotion"] == "true":
-                cameraController.setTriggering(True)
+                cameraController.setSettings('triggering', True)
             else:
-                cameraController.setTriggering(False)
+                cameraController.setSettings('triggering', False)
 
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):

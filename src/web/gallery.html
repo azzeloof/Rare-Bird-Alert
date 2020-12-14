@@ -17,8 +17,17 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.6.4/jquery.colorbox-min.js"></script>
         <script>
             function populateGallery() {
-                var gallery = document.getElementById("gallery");
+                // First, let's figure out how many images we need to display
+                var nPics;
+                fetch('?nImages').then(function(response) {
+                    response.text().then(function(text) {
+                        nPics = parseInt(text);
+                    });
+                });
+                // Now, lets figure out how many pages we need to generate
                 var picsPerPage = 10;
+                var nPages = Math.ceil(nPics/picsPerPage);
+                var gallery = document.getElementById("gallery");
                 for(i=0; i<picsPerPage; i++){
                     gallery.innerHTML += "<img class='gallery-thumb' src=images/" + i + ">";
                 };
@@ -47,21 +56,6 @@
          </nav> 
         <div class="container-fluid">
             <div class="row">
-                <!-- 
-                <h2 class="text-center">Archive</h2>
-                <div class="fotorama text-center" data-nav="thumbs">
-                    <img src="/images/0">
-                    <img src="/images/1">
-                    <img src="/images/2">
-                    <img src="/images/3">
-                    <img src="/images/4">
-                    <img src="/images/5">
-                    <img src="/images/6">
-                    <img src="/images/7">
-                    <img src="/images/8">
-                    <img src="/images/9">
-                </div>
-                -->
                 <div id="gallery" class="gallery text-center">
                     <!-- images go here -->
                 </div>

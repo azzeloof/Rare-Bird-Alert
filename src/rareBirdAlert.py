@@ -1,5 +1,5 @@
 from webServer import StreamingOutput, StreamingServer, StreamingHandler, initServer
-from camera import CameraController
+from cameraController import CameraController
 from trigger import MotionDetector
 import io
 import os

@@ -12,6 +12,16 @@
         <link rel="stylesheet" href="style.css">
         <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+        <script>
+            function getSettings() {
+                var settingsDiv = document.getElementById('settings');
+                fetch('?settings=all').then(function(response) {
+                    response.text().then(function(text) {
+                    poemDisplay.textContent = text;
+                    });
+                });
+            };
+        </script>
     </head>
     <body>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -33,7 +43,13 @@
             </ul>
          </nav> 
         <div class="container-fluid">
-        
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="settings" class="text-center">
+
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
