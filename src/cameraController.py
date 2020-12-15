@@ -40,16 +40,16 @@ class CameraController():
     def stopRecording(self, splitter_port=1):
         self.camera.stop_recording(splitter_port=splitter_port)
 
-    def setSettings(self, setting, value):
+    def setSettings(self, setting=None, value=None):
         # im not sorry
         if setting in self.settings:
             self.settings[setting] = value
-            self.camera.exposure_mode = self.settings['exposure']
-            self.camera.awb_mode = self.settings['whiteBalance']
-            self.camera.brightness = self.settings['brightness']
-            return 1 # success
-        else:
-            return 0 # failure
+        self.camera.exposure_mode = self.settings['exposure']
+        self.camera.awb_mode = self.settings['whiteBalance']
+        self.camera.brightness = self.settings['brightness']
+            #return 1 # success
+        #else:
+            #return 0 # failure
 
     def getSettings(self, setting='all'):
         if setting == 'all':
@@ -70,5 +70,6 @@ class CameraController():
             f = open("settings.json", "r")
             jsonData = json.load(f)
             self.settings = jsonData
+            self.setSettings()
         except:
             print("Cannot load JSON data")

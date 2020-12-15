@@ -174,11 +174,21 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         print(request)
         if "snap" in request:
             cameraController.snapPhoto()
-        if "toggleMotion" in request:
-            if request["toggleMotion"] == "true":
-                cameraController.setSettings('triggering', True)
-            else:
-                cameraController.setSettings('triggering', False)
+        elif "saveSettings" in request:
+            cameraController.saveSettings()
+        elif "loadSettings" in request:
+            cameraController.loadSettings()
+        else:
+            for item in request:
+                try:
+                    if request[item] == "true":
+                        request[item] = True
+                    elif request[item] == "false":
+                        request[item] = False
+                    cameraController.setSettings(item, request[item])
+                except:
+                    pass
+
 
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
