@@ -110,6 +110,16 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_header('Content-Length', len(content))
             self.end_headers()
             self.wfile.write(content)
+        elif parsedPath.query.startswith("settings"):
+            setting = parsedPath.query.split("=")[1]
+            val = cameraController.getSettings(setting)
+            self.send_response(200)
+            content = str(val).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html')
+            self.send_header('Content-Length', len(content))
+            self.end_headers()
+            self.wfile.write(content)
         else:
             filePath = webDir + parsedPath.path
             print(filePath)

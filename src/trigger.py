@@ -25,7 +25,7 @@ class MotionDetector(PiMotionAnalysis):
         t1 = time.time()
         if ((a > threshold).sum() > sensitivity) and (t1 > self.t0 + self.delay):
             print('Motion detected!')
-            if self.cameraObj.getSettings['triggering']:
+            if (self.cameraObj.getSettings('triggering') == True):
                 self.cameraObj.snapPhoto()
-                self.t0 = t1
+            self.t0 = t1
             

@@ -11,6 +11,9 @@ class CameraController():
         self.settings = {}
         self.settings['triggering'] = True
         self.settings['path'] = path
+        self.settings['whiteBalance'] = 'auto'
+        self.settings['exposure'] = 'auto'
+        self.settings['brightness'] = 50
 
     def getCamera(self):
         return self.camera
@@ -41,6 +44,9 @@ class CameraController():
         # im not sorry
         if setting in self.settings:
             self.settings[setting] = value
+            self.camera.exposure_mode = self.settings['exposure']
+            self.camera.awb_mode = self.settings['whiteBalance']
+            self.camera.brightness = self.settings['brightness']
             return 1 # success
         else:
             return 0 # failure

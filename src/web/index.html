@@ -14,6 +14,7 @@
         <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
         <script>
+            var cameraSettings;
             function submitSnap() {
                 var xhttp = new XMLHttpRequest();
                 xhttp.open("POST", "/index.html", true)
@@ -27,6 +28,16 @@
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send(setting + "=" + value);
                 return false;
+            };
+            function getSettings() {
+                fetch('?settings=all').then(function(response) {
+                    response.text().then(function(text) {
+                        var data = text;//.replace(/["']/g, "");
+                        console.log(data);
+                            //return text;
+                        cameraSettings = JSON.parse(data);
+                    });
+                });
             };
         </script>
         <script>
@@ -75,8 +86,48 @@
                             </svg>
                         </button>
                     </form>
-                    <form class="controls text-center">
-                        <input type="checkbox" id="toggleMotion" checked data-toggle="toggle" data-on="Motion On" data-off="Motion Off">
+                    <form class="row form justify-content-center">
+                        <div class="form-group text-center">
+                            <label for="wb-select">White Balance</label>
+                            <select class="form-control m-2" style="width:auto" id="wb-select">
+                                <option>None</option>
+                                <option>Auto</option>
+                                <option>Sunlight</option>
+                                <option>Cloudy</option>
+                                <option>Shade</option>
+                                <option>Tungsten</option>
+                                <option>Fluorescent</option>
+                                <option>Incandescent</option>
+                                <option>Flash</option>
+                                <option>Horizon</option>
+                            </select>
+                        </div>
+                        <div class="form-group text-center">
+                            <label for="exposure-select">Exposure</label>
+                            <select class="form-control m-2" style="width:auto" id="exposure-select">
+                                <option>None</option>
+                                <option>Auto</option>
+                                <option>Night</option>
+                                <option>Night Preview</option>
+                                <option>Backlight</option>
+                                <option>Spotlight</option>
+                                <option>Sports</option>
+                                <option>Snow</option>
+                                <option>Beach</option>
+                                <option>Very Long</option>
+                                <option>Fixed FPS</option>
+                                <option>Anti Shake</option>
+                                <option>Fireworks</option>
+                            </select>
+                        </div>
+                        <div class="form-group text-center">
+                            <label for="toggleMotion">Motion Detection</label><br>
+                            <input class="form-check-input m-2" type="checkbox" id="toggleMotion" checked data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+                        </div>
+                        <div class="form-group text-center">
+                            <label for="brightness-slider">Brightness</label>
+                            <input type="range" min="1" max="100" value="50" class="custom-range" id="brightness-slider">
+                        </div>
                     </form>
                 </div>
             </div>

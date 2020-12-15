@@ -19,7 +19,7 @@ h1, h2, h3, h4, h5 {
 .gallery-thumb {
     width: 300px;
     background-color: #a0a0a0;
-    margin: 20px;
+    margin: 15px;
     transition: transform .2s;
 }
 
@@ -29,4 +29,12 @@ h1, h2, h3, h4, h5 {
 
 .gallery {
     margin: 20px;
+}
+
+.btn {
+    margin-top: 7px;
+}
+
+.custom-range {
+    margin-top: 15px;
 }
