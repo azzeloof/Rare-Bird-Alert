@@ -15,16 +15,52 @@
         <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
         <script>
             function getSettings() {
-                var settingsDiv = document.getElementById('settings');
                 fetch('?settings=all').then(function(response) {
                     response.text().then(function(text) {
-                    poemDisplay.textContent = text;
+                        var data = text.replace(/[']/g, '"');
+                        data = data.replace('True', '"true"');
+                        data = data.replace('False', '"false"');
+                        console.log(data);
+                        cameraSettings = JSON.parse(data);
+                        document.getElementById("path").value = cameraSettings["path"];
+                        document.getElementById("motion-threshold").value = cameraSettings["motionThreshold"];
+                        document.getElementById("motion-sensitivity").value = cameraSettings["motionSensitivity"];
+                        document.getElementById("motion-delay").value = cameraSettings["motionDelay"];
+                        document.getElementById("motion-timeout").value = cameraSettings["motionTimeout"];
                     });
                 });
             };
+            function sendSetting(setting, value) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "/index.html", true)
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(setting + "=" + value);
+                return false;
+            };
+            function saveSettings() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "/index.html", true)
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("saveSettings=do");
+                return false;
+            };
+            function loadSettings() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "/index.html", true)
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("loadSettings=do");
+                getSettings();
+                return false;
+            };
+            function sendMotionSettings() {
+                sendSetting("motionThreshold", document.getElementById("motion-threshold").value);
+                sendSetting("motionSensitivity", document.getElementById("motion-threshold").value);
+                sendSetting("motionDelay", document.getElementById("motion-delay").value);
+                sendSetting("motionTimeout", document.getElementById("motion-timeout").value);
+            };
         </script>
     </head>
-    <body>
+    <body onload="getSettings()">
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <a class="navbar-brand" href="#">
                 <img src="bird.png" alt="Logo" style="width:40px;">
@@ -45,12 +81,97 @@
          </nav> 
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-12">
-                    <div id="settings" class="text-center">
-
-                    </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-6 controls">
+                    <form class="col">
+                        <div class="form-group">
+                            <label for="path">File path</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="path" aria-describedby="path-help">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="sendSetting('path', document.getElementById('path').value)">Set Path</button>
+                                </div>
+                            </div>
+                            <small id="path-help" class="form-text text-muted">The directory where captured images are saved</small>
+                        </div>
+                        
+                        <label>Motion detection</label>
+                        <div class="row">
+                            <div class="col">
+                                <label for="motion-threshold">Threshold</label>
+                                <input type="text" class="form-control" id="motion-threshold" aria-describedby="motion-threshold-help">
+                                <small id="motion-threshold-help" class="form-text text-muted">Motion detection threshold</small>
+                            </div>
+                            <div class="col">
+                                <label for="motion-sensitivity">Threshold</label>
+                                <input type="text" class="form-control" id="motion-sensitivity" aria-describedby="motion-sensitivity-help">
+                                <small id="motion-threshold-help" class="form-text text-muted">Motion detection sensitivity</small>
+                            </div>
+                            <div class="col">
+                                <label for="motion-delay">Delay</label>
+                                <input type="text" class="form-control" id="motion-delay" aria-describedby="motion-delay-help">
+                                <small id="motion-delay-help" class="form-text text-muted">Shutter delay after motion is detected</small>
+                            </div>
+                            <div class="col">
+                                <label for="motion-timeout">Timeout</label>
+                                <input type="text" class="form-control" id="motion-timeout" aria-describedby="motion-timeout-help">
+                                <small id="motion-timeout-help" class="form-text text-muted">Time to wait after motion is detected before checking again</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button class="btn btn-secondary" onclick="sendMotionSettings()">Set Motion Parameters</button>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#save-modal">Save Settings</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#load-modal">Load Settings</button>
+                        </div>
+                    </form>
                 </div>
+                <div class="col-md-3"></div>
             </div>
         </div>
+
+        <div class="modal fade" id="save-modal" tabindex="-1" role="dialog" aria-labelledby="save-modal-label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="save-modal-label">Save Settings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                Are you sure you want to save your settings? This will overwrite all previously saved settings (including camera settings on the Live Stream page).
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="saveSettings()">Save Settings</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="load-modal" tabindex="-1" role="dialog" aria-labelledby="load-modal-label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="load-modal-label">Load Settings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                Are you sure you want to load saved settings? This will overwrite settings (including camera settings on the Live Stream page).
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="loadSettings()">Load Settings</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
     </body>
 </html>

@@ -14,6 +14,11 @@ class CameraController():
         self.settings['whiteBalance'] = 'auto'
         self.settings['exposure'] = 'auto'
         self.settings['brightness'] = 50
+        self.settings['motionThreshold'] = 60
+        self.settings['motionSensitivity'] = 20
+        self.settings['motionDelay'] = 1
+        self.settings['motionTimeout'] = 5
+        self.loadSettings()
 
     def getCamera(self):
         return self.camera
@@ -69,7 +74,7 @@ class CameraController():
         try:
             f = open("settings.json", "r")
             jsonData = json.load(f)
-            self.settings = jsonData
+            self.settings.update(jsonData)
             self.setSettings()
         except:
             print("Cannot load JSON data")

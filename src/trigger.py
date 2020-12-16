@@ -6,16 +6,17 @@ from picamera.array import PiMotionAnalysis
 import time
 
 class MotionDetector(PiMotionAnalysis):
-    def start(self, cameraObj, delay=5):
+    def start(self, cameraObj):
         self.t0 = time.time()
-        self.delay = delay #seconds
         self.cameraObj = cameraObj
 
     # motion data is in 16 px blocks
     # for 640x480, this means 41x30
     def analyse(self, a):
-        threshold = 60
-        sensitivity = 20
+        threshold = self.cameraObj.getSettings("motionThreshold")
+        sensitivity = self.cameraObj.getSettings("motionSensitivity")
+        delay = self.cameraObj.getSettings["motionDelay"]
+        timeout = self.cameraObj.getSettings["motionTimeout"]
         a = np.sqrt(
             np.square(a['x'].astype(np.float)) +
             np.square(a['y'].astype(np.float))
@@ -23,7 +24,7 @@ class MotionDetector(PiMotionAnalysis):
         # If there're more than [sensitivity] vectors with a magnitude greater
         # than [threshold], then say we've detected motion
         t1 = time.time()
-        if ((a > threshold).sum() > sensitivity) and (t1 > self.t0 + self.delay):
+        if ((a > threshold).sum() > sensitivity) and (t1 > self.t0 + timeout):
             print('Motion detected!')
             if (self.cameraObj.getSettings('triggering') == True):
                 self.cameraObj.snapPhoto()
