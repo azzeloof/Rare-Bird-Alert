@@ -6,7 +6,7 @@ import os
 
 def rareBirdAlert():
     stillsPath = "/home/pi/stills"
-    cameraController = CameraController(resolution='1600x1200', framerate=24, path=stillsPath) # max '4056x3040'
+    cameraController = CameraController(resolution='4056x3040', framerate=24, path=stillsPath) # max '4056x3040'  '1600x1200'
     # high resolution and framerate required increasing pi GPU memory
     webOutput = StreamingOutput()
     cameraController.startRecording(webOutput, (800, 600), 'mjpeg')
@@ -18,8 +18,9 @@ def rareBirdAlert():
         while True:
             cameraController.camera.wait_recording(1)
     finally:
-        cameraController.stopRecording()
-        cameraController.stopRecording(splitter_port=2)
+        cameraController.getCamera().close()
+    #    cameraController.stopRecording()
+    #    cameraController.stopRecording(splitter_port=2)
 
 if __name__ == "__main__":
     rareBirdAlert()

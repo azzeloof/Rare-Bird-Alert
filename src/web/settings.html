@@ -94,38 +94,56 @@
                             </div>
                             <small id="path-help" class="form-text text-muted">The directory where captured images are saved</small>
                         </div>
+
+                        <fieldset>
+                            <legend class="scheduler-border">Camera</legend>
+                            <div class="row">
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <button class="btn btn-outline-secondary control-button" onclick="sendCameraSettings()">Set Camera Parameters</button>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend class="scheduler-border">Motion Detection</legend>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="motion-threshold">Threshold</label>
+                                    <input type="text" class="form-control" id="motion-threshold" aria-describedby="motion-threshold-help">
+                                    <small id="motion-threshold-help" class="form-text text-muted">Motion detection threshold</small>
+                                </div>
+                                <div class="col">
+                                    <label for="motion-sensitivity">Sensitivity</label>
+                                    <input type="text" class="form-control" id="motion-sensitivity" aria-describedby="motion-sensitivity-help">
+                                    <small id="motion-threshold-help" class="form-text text-muted">Motion detection sensitivity</small>
+                                </div>
+                                <div class="col">
+                                    <label for="motion-delay">Delay</label>
+                                    <input type="text" class="form-control" id="motion-delay" aria-describedby="motion-delay-help">
+                                    <small id="motion-delay-help" class="form-text text-muted">Shutter delay after motion is detected</small>
+                                </div>
+                                <div class="col">
+                                    <label for="motion-timeout">Timeout</label>
+                                    <input type="text" class="form-control" id="motion-timeout" aria-describedby="motion-timeout-help">
+                                    <small id="motion-timeout-help" class="form-text text-muted">Time to wait after motion is detected before checking again</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <button class="btn btn-outline-secondary control-button" onclick="sendMotionSettings()">Set Motion Parameters</button>
+                                </div>
+                            </div>
+                        </fieldset>
                         
-                        <label>Motion detection</label>
-                        <div class="row">
-                            <div class="col">
-                                <label for="motion-threshold">Threshold</label>
-                                <input type="text" class="form-control" id="motion-threshold" aria-describedby="motion-threshold-help">
-                                <small id="motion-threshold-help" class="form-text text-muted">Motion detection threshold</small>
-                            </div>
-                            <div class="col">
-                                <label for="motion-sensitivity">Threshold</label>
-                                <input type="text" class="form-control" id="motion-sensitivity" aria-describedby="motion-sensitivity-help">
-                                <small id="motion-threshold-help" class="form-text text-muted">Motion detection sensitivity</small>
-                            </div>
-                            <div class="col">
-                                <label for="motion-delay">Delay</label>
-                                <input type="text" class="form-control" id="motion-delay" aria-describedby="motion-delay-help">
-                                <small id="motion-delay-help" class="form-text text-muted">Shutter delay after motion is detected</small>
-                            </div>
-                            <div class="col">
-                                <label for="motion-timeout">Timeout</label>
-                                <input type="text" class="form-control" id="motion-timeout" aria-describedby="motion-timeout-help">
-                                <small id="motion-timeout-help" class="form-text text-muted">Time to wait after motion is detected before checking again</small>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center">
-                                <button class="btn btn-secondary" onclick="sendMotionSettings()">Set Motion Parameters</button>
-                            </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary control-button" data-toggle="modal" data-target="#save-modal">Save Settings</button>
+                            <button type="button" class="btn btn-primary control-button" data-toggle="modal" data-target="#load-modal">Load Settings</button>
                         </div>
                         <div class="text-center">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#save-modal">Save Settings</button>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#load-modal">Load Settings</button>
+                            <button type="button" class="btn btn-secondary control-button" data-toggle="modal" data-target="#about-modal">About</button>
                         </div>
                     </form>
                 </div>
@@ -167,6 +185,25 @@
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-success" data-dismiss="modal" onclick="loadSettings()">Load Settings</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="about-modal-label">About</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                Rare Bird Alert was originally built in 2020 by <a href="http://adam.zeloof.xyz" target="_blank">Adam Zeloof</a> for Beth Deene. It is licenced under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU GPLv3</a>. All source code is avalable on GitHub at <a href="https://github.com/azzeloof/Rare-Bird-Alert" target="_blank">https://github.com/azzeloof/Rare-Bird-Alert</a>.
+                </div>
+                <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>

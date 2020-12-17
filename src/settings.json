@@ -1,1 +1,1 @@
-{"triggering": false, "path": "/home/pi/stills", "whiteBalance": "flash", "exposure": "beach", "brightness": 50}
+{"triggering": false, "path": "/home/pi/stills", "whiteBalance": "auto", "exposure": "auto", "brightness": 50, "motionThreshold": 60, "motionSensitivity": 20, "motionDelay": 1, "motionTimeout": 5}
