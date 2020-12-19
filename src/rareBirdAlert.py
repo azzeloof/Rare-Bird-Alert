@@ -16,7 +16,7 @@ def rareBirdAlert():
     try:
         initServer(webOutput, cameraController)
         while True:
-            cameraController.camera.wait_recording(1)
+            cameraController.camera.wait_recording(0)
     finally:
         cameraController.getCamera().close()
     #    cameraController.stopRecording()

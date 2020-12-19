@@ -19,6 +19,12 @@
         <script>
             var curPage = 1;
             var maxPage;
+            /*
+            function setLightbox(i) {
+                var lightbox = document.getElementById("lightbox-modal-body");
+                lightbox.innerHTML = "<img class='img-responsive img-lightbox' src='/images/" + i + "'>";
+            };
+            */
             function populateGallery() {
                 // First, let's figure out how many images we need to display
                 var nPics;
@@ -27,7 +33,6 @@
                 var width = 400;
                 var height = 300;
                 var picsPerPage = Math.floor((w/width)*(h/height));
-                console.log(picsPerPage);
                 fetch('?nPics').then(function(response) {
                     response.text().then(function(text) {
                         nPics = parseInt(text);
@@ -40,6 +45,7 @@
                         var end = start + picsPerPage;
                         for(i=start; i<end; i++){
                             gallery.innerHTML += "<a data-toggle='lightbox' data-type='image' data-gallery='gallery' href='images/" + i + "'><img class='gallery-thumb' src='images/thumbs/" + i + "'></a>";
+                            //gallery.innerHTML += "<img data-toggle='lightbox' class='gallery-thumb' data-toggle='modal' data-target='#lightbox-modal' onclick='setLightbox(" + i + ");' src='images/thumbs/" + i + "'>";
                         };
                         var pagination = document.getElementById("pagination");
                         pagination.innerHTML = "<li class='page-item'><a class='page-link' href='#' onclick='incrementPage(0)'>Previous</a></li>";
@@ -69,7 +75,7 @@
             };
         </script>
     </head>
-    <body onresize="populateGallery()">
+    <body onresize="//populateGallery()">
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <a class="navbar-brand" href="#">
                 <img src="bird.png" alt="Logo" style="width:40px;">
@@ -105,5 +111,23 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="lightbox-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-lightbox" role="document">
+            <div class="modal-content modal-content-lightbox">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body" id="lightbox-modal-body">
+                
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+            </div>
+        </div>
+
     </body>
 </html>
