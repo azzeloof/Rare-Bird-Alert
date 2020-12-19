@@ -180,14 +180,17 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             cameraController.loadSettings()
         else:
             for item in request:
-                try:
-                    if request[item] == "true":
-                        request[item] = True
-                    elif request[item] == "false":
-                        request[item] = False
-                    cameraController.setSettings(item, request[item])
-                except:
-                    pass
+                #try:
+                if request[item] == "true":
+                    request[item] = True
+                elif request[item] == "false":
+                    request[item] = False
+                cameraController.setSettings(item, request[item])
+                #except:
+                #    print(request)
+                #    print(item)
+                #    print(request[item])
+                #    pass
 
 
 

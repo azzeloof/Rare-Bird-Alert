@@ -23,10 +23,10 @@
                         console.log(data);
                         cameraSettings = JSON.parse(data);
                         document.getElementById("path").value = cameraSettings["path"];
-                        document.getElementById("motion-threshold").value = cameraSettings["motionThreshold"];
-                        document.getElementById("motion-sensitivity").value = cameraSettings["motionSensitivity"];
-                        document.getElementById("motion-delay").value = cameraSettings["motionDelay"];
-                        document.getElementById("motion-timeout").value = cameraSettings["motionTimeout"];
+                        document.getElementById("motion-threshold").value = cameraSettings["motion_threshold"];
+                        document.getElementById("motion-sensitivity").value = cameraSettings["motion_sensitivity"];
+                        document.getElementById("motion-delay").value = cameraSettings["motion_delay"];
+                        document.getElementById("motion-timeout").value = cameraSettings["motion_timeout"];
                     });
                 });
             };
@@ -53,10 +53,10 @@
                 return false;
             };
             function sendMotionSettings() {
-                sendSetting("motionThreshold", document.getElementById("motion-threshold").value);
-                sendSetting("motionSensitivity", document.getElementById("motion-threshold").value);
-                sendSetting("motionDelay", document.getElementById("motion-delay").value);
-                sendSetting("motionTimeout", document.getElementById("motion-timeout").value);
+                sendSetting("motion_threshold", document.getElementById("motion-threshold").value);
+                sendSetting("motion_sensitivity", document.getElementById("motion-threshold").value);
+                sendSetting("motion_delay", document.getElementById("motion-delay").value);
+                sendSetting("motion_timeout", document.getElementById("motion-timeout").value);
             };
         </script>
     </head>

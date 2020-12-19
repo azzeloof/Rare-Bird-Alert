@@ -37,15 +37,17 @@
                         data = data.replace('False', '"false"');
                         console.log(data);
                         cameraSettings = JSON.parse(data);
-                        document.getElementById("wb-select").value = cameraSettings["whiteBalance"];
+                        document.getElementById("wb-select").value = cameraSettings["white_balance"];
                         document.getElementById("exposure-select").value = cameraSettings["exposure"];
                         if (cameraSettings["triggering"] == "true") {
-                            document.getElementById("toggleMotion").checked = true;
+                            document.getElementById("toggle-motion").checked = true;
                         } else {
-                            document.getElementById("toggleMotion").checked = false;
+                            document.getElementById("toggle-motion").checked = false;
                         };                        
                         document.getElementById("brightness-slider").value = cameraSettings["brightness"];
                         document.getElementById("brightness-label").innerHTML = "Brightness (" + cameraSettings["brightness"] + ")";
+                        document.getElementById("exposure-comp-slider").value = cameraSettings["exposure_compensation"];
+                        setExposureCompensationLabel(parseInt(cameraSettings["exposure_compensation"]))
                     });
                 });
             };
@@ -54,7 +56,7 @@
             $(function() {
               $('#wb-select').change(function() {
                 //$('#console-event').html('Toggle: ' + $(this).prop('checked'))
-                sendSetting('whiteBalance', $(this).prop('value'))
+                sendSetting('white_balance', $(this).prop('value'))
               });
             });
             $(function() {
@@ -64,7 +66,7 @@
               });
             });
             $(function() {
-              $('#toggleMotion').change(function() {
+              $('#toggle-motion').change(function() {
                 sendSetting('triggering', $(this).prop('checked'))
               });
             });
@@ -74,6 +76,37 @@
                 document.getElementById("brightness-label").innerHTML = "Brightness (" + $(this).prop('value') + ")";
               });
             });
+            
+            $(function() {
+              $('#exposure-comp-slider').change(function() {
+                sendSetting('exposure_compensation', $(this).prop('value'))
+                setExposureCompensationLabel($(this).prop('value'));
+              });
+            });
+            function resetBrightness() {
+                var base = 50;
+                document.getElementById("brightness-slider").value = base;
+                sendSetting('brightness', base)
+                document.getElementById("brightness-label").innerHTML = "Brightness (" + base + ")";
+            }
+            function resetExposureComp() {
+                var base = 0;
+                document.getElementById("exposure-comp-slider").value = base;
+                sendSetting('exposure_compensation', base)
+                setExposureCompensationLabel(base)
+            }
+            function setExposureCompensationLabel(rawVal) {
+                var val = (rawVal/6).toFixed(1);
+                var sign = "";
+                if (val > 0) {
+                    sign = "+";
+                } else if (val == 0) {
+                    sign = "";
+                } else {
+                    sign = "-";
+                }
+                document.getElementById("exposure-comp-label").innerHTML = "Exposure Compensation (" + sign + Math.abs(val) + ")";
+            }
           </script>
         <link  href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
@@ -113,52 +146,55 @@
                             </svg>
                         </button>
                     </form>
-                    <form class="row form justify-content-center">
-                        <div class="form-group text-center">
-                            <label for="wb-select">White Balance</label>
-                            <select class="form-control m-2" style="width:auto" id="wb-select">
-                                <option value="none">Lock</option>
-                                <option value="auto">Auto</option>
-                                <option value="sunlight">Sunlight</option>
-                                <option value="cloudy">Cloudy</option>
-                                <option value="shade">Shade</option>
-                                <option value="tungsten">Tungsten</option>
-                                <option value="flourescent">Fluorescent</option>
-                                <option value="incandescent">Incandescent</option>
-                                <option value="flash">Flash</option>
-                                <option value="horizon">Horizon</option>
-                            </select>
+                        <div class="row text-center">
+                            <div class="form-group text-center controls">
+                                <label for="wb-select">White Balance</label>
+                                <select class="form-control m-2" style="width:auto" id="wb-select">
+                                    <option value="none">Lock</option>
+                                    <option value="auto">Auto</option>
+                                    <option value="sunlight">Sunlight</option>
+                                    <option value="cloudy">Cloudy</option>
+                                    <option value="shade">Shade</option>
+                                    <option value="tungsten">Tungsten</option>
+                                    <option value="flourescent">Fluorescent</option>
+                                    <option value="incandescent">Incandescent</option>
+                                    <option value="flash">Flash</option>
+                                    <option value="horizon">Horizon</option>
+                                </select>
+                            </div>
+                            <div class="form-group text-center controls">
+                                <label for="exposure-select">Exposure</label>
+                                <select class="form-control m-2" style="width:auto" id="exposure-select">
+                                    <option value="off">Lock</option>
+                                    <option value="auto">Auto</option>
+                                    <option value="night">Night</option>
+                                    <option value="night-preview">Night Preview</option>
+                                    <option value="backlight">Backlight</option>
+                                    <option value="spotlight">Spotlight</option>
+                                    <option value="sports">Sports</option>
+                                    <option value="snow">Snow</option>
+                                    <option value="beach">Beach</option>
+                                    <option value="very-long">Very Long</option>
+                                    <option falue="fixed-fps">Fixed FPS</option>
+                                    <option value="anti-shake">Anti Shake</option>
+                                    <option value="fireworks">Fireworks</option>
+                                </select>
+                            </div>
+                            <div class="form-group text-center controls">
+                                <label for="toggle-motion">Motion Detection</label><br>
+                                <input class="form-check-input m-2" type="checkbox" id="toggle-motion" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+                            </div>
+                            <div class="form-group text-center controls">
+                                <label id="brightness-label" for="brightness-slider">Brightness</label>
+                                <input type="range" min="1" max="100" value="50" class="custom-range" id="brightness-slider" ondblclick="resetBrightness();">
+                            </div>
                         </div>
-                        <div class="form-group text-center">
-                            <label for="exposure-select">Exposure</label>
-                            <select class="form-control m-2" style="width:auto" id="exposure-select">
-                                <option value="none">Lock</option>
-                                <option value="auto">Auto</option>
-                                <option value="night">Night</option>
-                                <option value="night-preview">Night Preview</option>
-                                <option value="backlight">Backlight</option>
-                                <option value="spotlight">Spotlight</option>
-                                <option value="sports">Sports</option>
-                                <option value="snow">Snow</option>
-                                <option value="beach">Beach</option>
-                                <option value="very-long">Very Long</option>
-                                <option falue="fixed-fps">Fixed FPS</option>
-                                <option value="anti-shake">Anti Shake</option>
-                                <option value="fireworks">Fireworks</option>
-                            </select>
+                        <div class="row">
+                            <div class="form-group text-center controls">
+                                <label id="exposure-comp-label" for="exposure-comp-slider">Exposure Compensation</label>
+                                <input type="range" min="-25" max="25" value=0 class="custom-range" id="exposure-comp-slider" ondblclick="resetExposureComp();">
+                            </div>
                         </div>
-                        <div class="form-group text-center">
-                            <label for="toggleMotion">Motion Detection</label><br>
-                            <input class="form-check-input m-2" type="checkbox" id="toggleMotion" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
-                        </div>
-                        <div class="form-group text-center">
-                            <label id="brightness-label" for="brightness-slider">Brightness</label>
-                            <input type="range" min="1" max="100" value="50" class="custom-range" id="brightness-slider">
-                        </div>
-                    </form>
-                    <form class="row form justify-content-center">
-                        
-                    </form>
                 </div>
                 <script>
                     getSettings();

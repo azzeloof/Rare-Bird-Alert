@@ -11,13 +11,14 @@ class CameraController():
         self.settings = {}
         self.settings['triggering'] = True
         self.settings['path'] = path
-        self.settings['whiteBalance'] = 'auto'
+        self.settings['white_balance'] = 'auto'
         self.settings['exposure'] = 'auto'
         self.settings['brightness'] = 50
-        self.settings['motionThreshold'] = 60
-        self.settings['motionSensitivity'] = 20
-        self.settings['motionDelay'] = 1
-        self.settings['motionTimeout'] = 5
+        self.settings['motion_threshold'] = 60
+        self.settings['motion_sensitivity'] = 20
+        self.settings['motion_delay'] = 1
+        self.settings['motion_timeout'] = 5
+        self.settings['exposure_compensation'] = 0
         self.loadSettings()
 
     def getCamera(self):
@@ -50,8 +51,9 @@ class CameraController():
         if setting in self.settings:
             self.settings[setting] = value
         self.camera.exposure_mode = self.settings['exposure']
-        self.camera.awb_mode = self.settings['whiteBalance']
-        self.camera.brightness = self.settings['brightness']
+        self.camera.awb_mode = self.settings['white_balance']
+        self.camera.brightness = int(self.settings['brightness'])
+        self.camera.exposure_compensation = int(self.settings['exposure_compensation'])
             #return 1 # success
         #else:
             #return 0 # failure
