@@ -79,28 +79,28 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                 self.wfile.write(image)
             except:
                 print("Cannot access image.")
-        elif parsedPath.path == '/stream.mjpg':
-            self.send_response(200)
-            self.send_header('Age', 0)
-            self.send_header('Cache-Control', 'no-cache, private')
-            self.send_header('Pragma', 'no-cache')
-            self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
-            self.end_headers()
-            try:
-                while True:
-                    with videoStream.condition:
-                        videoStream.condition.wait()
-                        frame = videoStream.frame
-                    self.wfile.write(b'--FRAME\r\n')
-                    self.send_header('Content-Type', 'image/jpeg')
-                    self.send_header('Content-Length', len(frame))
-                    self.end_headers()
-                    self.wfile.write(frame)
-                    self.wfile.write(b'\r\n')
-            except Exception as e:
-                logging.warning(
-                    'Removed streaming client %s: %s',
-                    self.client_address, str(e))
+        #elif parsedPath.path == '/stream.mjpg':
+        #    self.send_response(200)
+        #    self.send_header('Age', 0)
+        #    self.send_header('Cache-Control', 'no-cache, private')
+        #    self.send_header('Pragma', 'no-cache')
+        #    self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
+        #    self.end_headers()
+        #    try:
+        #        while True:
+        #            with videoStream.condition:
+        #                videoStream.condition.wait()
+        #                frame = videoStream.frame
+        #            self.wfile.write(b'--FRAME\r\n')
+        #            self.send_header('Content-Type', 'image/jpeg')
+        #            self.send_header('Content-Length', len(frame))
+        #            self.end_headers()
+        #            self.wfile.write(frame)
+        #            self.wfile.write(b'\r\n')
+        #    except Exception as e:
+        #        logging.warning(
+        #            'Removed streaming client %s: %s',
+        #            self.client_address, str(e))
         elif parsedPath.query == 'nPics':
             nPics = countPics()
             self.send_response(200)
@@ -141,6 +141,16 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     content = requestedData.encode('utf-8')
                     self.send_response(200)
                     self.send_header('Content-Type', 'text/css')
+                    self.send_header('Content-Length', len(content))
+                    self.end_headers()
+                    self.wfile.write(content)
+                elif parsedPath.path.endswith(".js"):
+                    requestedFile = open(filePath, 'r')
+                    requestedData = requestedFile.read()
+                    requestedFile.close()
+                    content = requestedData.encode('utf-8')
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/javascript')
                     self.send_header('Content-Length', len(content))
                     self.end_headers()
                     self.wfile.write(content)
@@ -198,10 +208,8 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-def initServer(videoStreamInput, cameraInput):
-    global videoStream
+def initServer(cameraInput):
     global cameraController
-    videoStream = videoStreamInput
     cameraController = cameraInput
     address = ('', 8000)
     server = StreamingServer(address, StreamingHandler)

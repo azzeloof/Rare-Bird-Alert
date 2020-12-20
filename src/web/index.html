@@ -133,9 +133,24 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col text-center">
+                    <!--
                     <img class="text-center .img-fluid rounded" id="stream" src="stream.mjpg" width="800" height="600">
+                    -->
+                    <canvas id="videoCanvas" width="960" height="640"></canvas>
                 </div>
             </div>
+            <script type="text/javascript" src="jsmpg.js"></script>
+            <script type="text/javascript">
+                // Show loading notice
+                var canvas = document.getElementById('videoCanvas');
+                var ctx = canvas.getContext('2d');
+                //ctx.fillStyle = '${COLOR}';
+                ctx.fillText('Loading...', canvas.width/2-30, canvas.height/3);
+        
+                // Setup the WebSocket connection and start the player
+                var client = new WebSocket('ws://' + window.location.hostname + ':8084/');
+                var player = new jsmpeg(client, {canvas:canvas});
+            </script>
             <div class="row">
                 <div class="col-sm-12">
                     <form class="controls text-center" onsubmit="return submitSnap()">

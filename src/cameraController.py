@@ -41,7 +41,10 @@ class CameraController():
         self.camera.capture(self.settings['path'] + os.sep + timestr + "-bird.jpg", use_video_port=False)
 
     def startRecording(self, output, resolution, encoding, splitter_port=1, motion_output=None):
-        self.camera.start_recording(output, resize=resolution, format=encoding, splitter_port=splitter_port, motion_output=motion_output)
+        if (encoding == "h264"):
+            self.camera.start_recording(output, resize=resolution, format=encoding, splitter_port=splitter_port, motion_output=motion_output)
+        else:
+            self.camera.start_recording(output, resize=resolution, format=encoding, splitter_port=splitter_port)
 
     def stopRecording(self, splitter_port=1):
         self.camera.stop_recording(splitter_port=splitter_port)
