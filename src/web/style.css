@@ -72,3 +72,7 @@ legend {
     min-height: 100%;
     border-radius: 0;
   }
+
+  .ekko-lightbox .modal-dialog .modal-content .modal-header {
+      border-bottom: 0;
+  }

@@ -22,14 +22,10 @@ def parsePost(post_body):
         request[querySplit[0]] = querySplit[1]
     return request
 
-def getImage(n, thumb):
+def getImage(fileName, thumb):
     path = cameraController.getSettings('path')
     thumbsize = 400, 400
-    images = os.listdir(path)
-    images = [f.lower() for f in images]
-    sortedImages = sorted(images)
-    sortedImages.reverse()
-    imageFile = open(path + os.sep + sortedImages[n], 'rb')
+    imageFile = open(path + os.sep + fileName, 'rb')
     image = Image.open(imageFile)
     if thumb:
         image.thumbnail(thumbsize)
@@ -40,6 +36,24 @@ def getImage(n, thumb):
 def countPics():
     path = cameraController.getSettings('path')
     return len([f for f in os.listdir(path)if os.path.isfile(os.path.join(path, f))])
+
+def getPicFilenames(start, end):
+    path = cameraController.getSettings('path')
+    images = sorted(os.listdir(path))
+    images.reverse()
+    if images != None:
+        if start < len(images):
+            if end < len(images):
+                return images[start:end]
+            else:
+                print("End out of bounds")
+                return images[start:len(images)-1]
+        else:
+            print("Start out of bounds")
+            return None
+    else:
+        print("No image files to list")
+        return None
 
 class StreamingOutput(object):
     def __init__(self):
@@ -67,12 +81,13 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_response(301)
             self.send_header('Location', '/index.html')
             self.end_headers()
-        elif parsedPath.path.startswith("/images"):
+        elif parsedPath.path.startswith("/image"):
             pathSplit = parsedPath.path.split('/')
-            pathSplitLen = len(pathSplit)
+            fileName = pathSplit[2]
+            print(fileName)
+            thumb = parsedPath.query == "thumb"
             try:
-                n = int(pathSplit[pathSplitLen-1])
-                image = getImage(n, pathSplit[pathSplitLen-2] == "thumbs")
+                image = getImage(fileName, thumb)
                 self.send_response(200)
                 self.send_header('Content-Type', 'image/jpg')
                 self.end_headers()
@@ -103,8 +118,17 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.client_address, str(e))
         elif parsedPath.query == 'nPics':
             nPics = countPics()
-            self.send_response(200)
             content = str(nPics).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html')
+            self.send_header('Content-Length', len(content))
+            self.end_headers()
+            self.wfile.write(content)
+        elif parsedPath.query.startswith('picFilenames'):
+            fileRange = parsedPath.query.split('=')[1]
+            start = int(fileRange.split('-')[0])
+            end = int(fileRange.split('-')[1])
+            content = str(getPicFilenames(start, end)).encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.send_header('Content-Length', len(content))
