@@ -6,6 +6,7 @@ import io
 import os
 import logging
 import socketserver
+import threading
 from threading import Condition
 from http import server
 from urllib.parse import urlparse
@@ -229,11 +230,22 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
+def runServer(path, port):
+    address = (path, port)
+    server = StreamingServer(address, StreamingHandler)
+    server.serve_forever()
+
 def initServer(videoStreamInput, cameraInput):
     global videoStream
     global cameraController
     videoStream = videoStreamInput
     cameraController = cameraInput
-    address = ('', 8000)
-    server = StreamingServer(address, StreamingHandler)
-    server.serve_forever()
+    path = ''
+    port = 8000
+    daemon = threading.Thread(name='daemon_server',
+                          target=runServer,
+                          args=(path, port))
+    daemon.setDaemon(True) # Set as a daemon so it will be killed once the main thread is dead.
+    daemon.start()
+    #server = StreamingServer(address, StreamingHandler)
+    #server.serve_forever()

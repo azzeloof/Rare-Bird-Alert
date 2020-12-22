@@ -8,20 +8,15 @@ import time
 class MotionDetector(PiMotionAnalysis):
     def start(self, cameraObj):
         self.t0 = time.time()
-        self.t1 = time.time()
         self.cameraObj = cameraObj
-
-
-    def snap(self):
-
 
     # motion data is in 16 px blocks
     # for 640x480, this means 41x30
     def analyse(self, a):
         threshold = self.cameraObj.getSettings("motion_threshold")
         sensitivity = self.cameraObj.getSettings("motion_sensitivity")
-        delay = self.cameraObj.getSettings["motion_delay"]
-        timeout = self.cameraObj.getSettings["motion_timeout"]
+        delay = self.cameraObj.getSettings("motion_delay")
+        timeout = self.cameraObj.getSettings("motion_timeout")
         a = np.sqrt(
             np.square(a['x'].astype(np.float)) +
             np.square(a['y'].astype(np.float))

@@ -1,7 +1,9 @@
 import os
+import io
 import picamera
 import time
 import json
+from PIL import Image
 
 class CameraController():
     def __init__(self, resolution, framerate, path):
@@ -39,6 +41,17 @@ class CameraController():
     def snapPhoto(self):
         timestr = time.strftime("%Y%m%d-%H%M%S")
         self.camera.capture(self.settings['path'] + os.sep + timestr + "-bird.jpg", use_video_port=False)
+
+    def getImage(self, width, height):
+        """
+        Retrieves the current frame and returns it as a PIL object
+        """
+        image = io.BytesIO()
+        self.camera.capture(image, format='jpeg', resize=(width, height), use_video_port=True)#, splitter_port=splitter_port)
+        image.flush()
+        image.seek(0)
+        output = Image.open(image)
+        return output
 
     def startRecording(self, output, resolution, encoding, splitter_port=1, motion_output=None):
         self.camera.start_recording(output, resize=resolution, format=encoding, splitter_port=splitter_port, motion_output=motion_output)
