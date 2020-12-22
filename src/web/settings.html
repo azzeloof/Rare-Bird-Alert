@@ -32,21 +32,21 @@
             };
             function sendSetting(setting, value) {
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "/index.html", true)
+                xhttp.open("POST", "/live", true)
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send(setting + "=" + value);
                 return false;
             };
             function saveSettings() {
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "/index.html", true)
+                xhttp.open("POST", "/live", true)
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send("saveSettings=do");
                 return false;
             };
             function loadSettings() {
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "/index.html", true)
+                xhttp.open("POST", "/live", true)
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send("loadSettings=do");
                 getSettings();
@@ -69,10 +69,10 @@
             <a class="navbar-brand" href="#">Rare Bird Alert</a>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html">Live Stream</a>
+                    <a class="nav-link" href="live">Live Stream</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="gallery.html">Gallery</a>
+                    <a class="nav-link" href="gallery">Gallery</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Settings</a>

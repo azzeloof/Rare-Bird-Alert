@@ -17,14 +17,14 @@
             var cameraSettings;
             function submitSnap() {
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "/index.html", true)
+                xhttp.open("POST", "/live", true)
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send("snap=do");
                 return false;
             };
             function sendSetting(setting, value) {
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "/index.html", true)
+                xhttp.open("POST", "/live", true)
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send(setting + "=" + value);
                 return false;
@@ -123,21 +123,22 @@
                     <a class="nav-link" href="#">Live Stream</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="gallery.html">Gallery</a>
+                    <a class="nav-link" href="gallery">Gallery</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="settings.html">Settings</a>
+                    <a class="nav-link" href="settings">Settings</a>
                 </li>
             </ul>
          </nav> 
         <div class="container-fluid">
             <div class="row">
                 <div class="col text-center">
-                    <img class="text-center .img-fluid rounded" id="stream" src="stream.mjpg" width="800" height="600">
+                    <img class="text-center img-fluid rounded" id="stream" src="stream.mjpg">
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
                     <form class="controls text-center" onsubmit="return submitSnap()">
                         <button type="submit" name="snap" value="do" class="btn btn-outline-primary text-center">
                             <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-camera-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -196,6 +197,7 @@
                             </div>
                         </div>
                 </div>
+                <div class="col-sm-3"></div>
                 <script>
                     getSettings();
                 </script>

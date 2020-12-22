@@ -8,7 +8,12 @@ import time
 class MotionDetector(PiMotionAnalysis):
     def start(self, cameraObj):
         self.t0 = time.time()
+        self.t1 = time.time()
         self.cameraObj = cameraObj
+
+
+    def snap(self):
+
 
     # motion data is in 16 px blocks
     # for 640x480, this means 41x30

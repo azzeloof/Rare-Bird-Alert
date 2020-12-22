@@ -79,7 +79,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         print(parsedPath)
         if parsedPath.path == '/':
             self.send_response(301)
-            self.send_header('Location', '/index.html')
+            self.send_header('Location', '/live')
             self.end_headers()
         elif parsedPath.path.startswith("/image"):
             pathSplit = parsedPath.path.split('/')
@@ -184,9 +184,16 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.send_header('Content-Type', 'image/png')
                     self.end_headers()
                     self.wfile.write(requestedData)
-                else:
-                    self.send_error(404)
+                else: #assume html                    
+                    requestedFile = open(filePath + ".html", 'r')
+                    requestedData = requestedFile.read()
+                    requestedFile.close()
+                    content = requestedData.encode('utf-8')
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'text/html')
+                    self.send_header('Content-Length', len(content))
                     self.end_headers()
+                    self.wfile.write(content)
             except:
                 self.send_error(404)
                 self.end_headers()
