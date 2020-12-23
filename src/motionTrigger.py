@@ -1,4 +1,12 @@
-#https://picamera.readthedocs.io/en/release-1.13/api_array.html#pimotionanalysis
+"""
+motionTrigger.py
+Adam Zeloof
+12/22/2020
+
+This code is licenced under GNU GPLv3 (see LICENCE for details)
+
+Based very heavily on https://picamera.readthedocs.io/en/release-1.13/api_array.html#pimotionanalysis
+"""
 
 import numpy as np
 import picamera

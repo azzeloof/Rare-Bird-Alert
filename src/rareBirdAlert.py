@@ -1,3 +1,11 @@
+"""
+rareBirdAlert.py
+Adam Zeloof
+12/22/2020
+
+This code is licenced under GNU GPLv3 (see LICENCE for details)
+"""
+
 from webServer import StreamingOutput, StreamingServer, StreamingHandler, initServer
 from cameraController import CameraController
 from motionTrigger import MotionDetector
@@ -6,7 +14,7 @@ import io
 import os
 
 def rareBirdAlert():
-    stillsPath = "/home/pi/stills"
+    stillsPath = "/home/pi/stills" # Where will save captured still images
     cameraController = CameraController(resolution='4056x3040', framerate=24, path=stillsPath) # max '4056x3040'  '1600x1200'
     # high resolution and framerate required increasing pi GPU memory
     webOutput = StreamingOutput()

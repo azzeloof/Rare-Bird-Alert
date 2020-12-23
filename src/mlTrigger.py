@@ -1,10 +1,17 @@
+"""
+mlTrigger.py
+Adam Zeloof
+12/22/2020
+
+This code is licenced under GNU GPLv3 (see LICENCE for details)
+"""
+
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import load_img
 from tensorflow.keras.preprocessing.image import img_to_array
-#from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import threading
 import time
 import json
@@ -12,7 +19,11 @@ import csv
 import os
 
 class MLTrigger():
-    def __init__(self, cameraController, imageWidth=224, imageHeight=224, timeout=2):
+    """
+    A class that handles pulling and classifying frames from the camera.
+    The classification loop is run in a thread so it doesn't block other camera functions.
+    """
+    def __init__(self, cameraController, imageWidth: int=224, imageHeight: int=224, timeout: int=2):
         self.cameraController = cameraController
         self.imageWidth = imageWidth
         self.imageHeight = imageHeight
@@ -40,18 +51,24 @@ class MLTrigger():
             print("File bird-labels.csv not found!")
         print("model loaded")
     
-    def setTimeout(self, timeout):
+    def setTimeout(self, timeout: int):
+        """
+        Sets the timeout between image checks (in seconds)
+        """
         self.timeout = timeout
 
     def getTimeout(self):
+        """
+        Returns the timeout between image checks (in seconds)
+        """
         return self.timeout
 
     def checkImage(self):
-        # this needs to be reworked to take input from camera
+        """
+        Pull an image frame from the camera and attempt to classify it
+        """
         if time.time() > self.t0 + self.timeout:
             self.t0 = time.time()
-            #fname = "img.jpg"
-            #img = load_img(self.imgPath + os.sep + fname, target_size=(self.imageWidth, self.imageHeight))
             image = self.cameraController.getImage(self.imageWidth, self.imageHeight)
             numpyImage = img_to_array(image)
             imageBatch = np.expand_dims(numpyImage, axis=0)
@@ -75,10 +92,18 @@ class MLTrigger():
             return results
         
     def checkForever(self):
+        """
+        Infinite loop that continually calls checkImage()
+        """
         while True:
             self.checkImage()
 
     def start(self):
+        """
+        Spawn a thread that runs self.checkForever()
+        This continually pulls images from the camera and attempots to classify them
+        (with a timeout between each image fetch)
+        """
         daemon = threading.Thread(name='daemon_ml_trigger',
                           target=self.checkForever)
         daemon.setDaemon(True) # Set as a daemon so it will be killed once the main thread is dead.

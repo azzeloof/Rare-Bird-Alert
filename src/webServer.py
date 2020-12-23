@@ -1,6 +1,12 @@
-# Web streaming example
-# Source code from the official PiCamera package
-# http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming
+"""
+webServer.py
+Adam Zeloof
+12/22/2020
+
+This code is licenced under GNU GPLv3 (see LICENCE for details)
+
+Initially based on http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming
+"""
 
 import io
 import os
@@ -15,6 +21,9 @@ from PIL import Image
 webDir = "web"
 
 def parsePost(post_body):
+    """
+    Parses the data in a http POST request
+    """
     post_body = post_body.decode('UTF-8')
     queries = post_body.split('&')
     request = {}
@@ -23,7 +32,11 @@ def parsePost(post_body):
         request[querySplit[0]] = querySplit[1]
     return request
 
-def getImage(fileName, thumb):
+def getImage(fileName: str, thumb: bool):
+    """
+    Loads an image and prepares it to be sent via the server
+    Also resizes to a thumbnail if needed
+    """
     path = cameraController.getSettings('path')
     thumbsize = 400, 400
     imageFile = open(path + os.sep + fileName, 'rb')
@@ -35,10 +48,17 @@ def getImage(fileName, thumb):
     return output.getvalue()
 
 def countPics():
+    """
+    Returns the number of still images saved in the stills directory
+    """
     path = cameraController.getSettings('path')
     return len([f for f in os.listdir(path)if os.path.isfile(os.path.join(path, f))])
 
-def getPicFilenames(start, end):
+def getPicFilenames(start: int, end: int):
+    """
+    Returns an array of image filenames for a given range of images
+    where 0 corresponds to the most recent image
+    """
     path = cameraController.getSettings('path')
     images = sorted(os.listdir(path))
     images.reverse()
@@ -74,8 +94,13 @@ class StreamingOutput(object):
         return self.buffer.write(buf)
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
+    """
+    Handle http requests
+    """
     def do_GET(self):
-        #print(urlparse(self.path))
+        """
+        Handle http GET requests
+        """
         parsedPath = urlparse(self.path)
         print(parsedPath)
         if parsedPath.path == '/':
@@ -200,6 +225,9 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                 self.end_headers()
 
     def do_POST(self):
+        """
+        Handle http POST requests
+        """
         content_len = int(self.headers.get('Content-Length', 0)) # 0 is default value
         post_body = self.rfile.read(content_len)
         request = parsePost(post_body)
@@ -230,12 +258,18 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-def runServer(path, port):
+def runServer(path: str, port: int):
+    """
+    Starts the server (surprise surprise)
+    """
     address = (path, port)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()
 
 def initServer(videoStreamInput, cameraInput):
+    """
+    Creates and runs the server in a thread so it doesn't block other operations
+    """
     global videoStream
     global cameraController
     videoStream = videoStreamInput
@@ -247,5 +281,3 @@ def initServer(videoStreamInput, cameraInput):
                           args=(path, port))
     daemon.setDaemon(True) # Set as a daemon so it will be killed once the main thread is dead.
     daemon.start()
-    #server = StreamingServer(address, StreamingHandler)
-    #server.serve_forever()
