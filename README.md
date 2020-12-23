@@ -1,21 +1,23 @@
-rare bird alert
+# Rare Bird Alert
+Okay, this doesn't actally alert you about rare birds (yet?), but it does take pictures of birds. Hopefully.
 
-requires
-PIL
-scipy (numpy, matplotlib)
-picamera
-tensorflow
+Rare Bird Alert is a Raspberry Pi-based birdfeeder camera. 
 
-https://raspberrypi.stackexchange.com/questions/107483/error-installing-tensorflow-cannot-find-libhdfs-so
+## Requirements
 
-raspi-config:
-enable camera
-Set pi GPU memory to at least 126mb (if full resolution desired)
-set {hostname} to birds (if desired)
++ PIL
++ scipy (numpy, matplotlib)
++ picamera
++ tensorflow (installed with instructions [here](https://raspberrypi.stackexchange.com/questions/107483/error-installing-tensorflow-cannot-find-libhdfs-so))
 
-Set up apache server
-set up dashboard at {hostname}.local:8080
-reverse proxy main interface to {hostname}.local
+## Setup
+run `sudo raspi-config` and:
++ Enable camera
++ Set pi GPU memory to at least 126mb (if we want to capture full resolution images with the HQ camera)
++ set the hostname to birds (if desired)
++ Set up apache server
++ Set up reverse proxy main interface to {hostname}.local
++ Download MobileNet labels and save them at `src/mobilenet-labels.json` (maybe do this in .sh?)
 
-get MobileNet labels and save them as 'mobilenet-labels.json'
-maybe do this in .sh?
+Now, the software can be run by executing `rareBirdAlert.sh` and the camera web interface can be accessed at `http://birds.local`
+
