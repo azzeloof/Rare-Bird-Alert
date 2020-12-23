@@ -1,6 +1,7 @@
 from webServer import StreamingOutput, StreamingServer, StreamingHandler, initServer
 from cameraController import CameraController
-from trigger import MotionDetector
+from motionTrigger import MotionDetector
+from mlTrigger import MLTrigger
 import io
 import os
 
@@ -10,11 +11,13 @@ def rareBirdAlert():
     # high resolution and framerate required increasing pi GPU memory
     webOutput = StreamingOutput()
     cameraController.startRecording(webOutput, (800, 600), 'mjpeg')
-    detector = MotionDetector(cameraController.getCamera(), size=(640, 480))
-    detector.start(cameraController)
-    cameraController.startRecording(os.devnull, (640, 480), 'h264', splitter_port=2, motion_output=detector)
+    #motionDetector = MotionDetector(cameraController.getCamera(), size=(640, 480))
+    #motionDetector.start(cameraController)
+    mlDetector = MLTrigger(cameraController, timeout=5)
+    #cameraController.startRecording(os.devnull, (640, 480), 'h264', splitter_port=2, motion_output=motionDetector)
     try:
         initServer(webOutput, cameraController)
+        mlDetector.start()
         while True:
             cameraController.camera.wait_recording(0)
     finally:
