@@ -13,7 +13,7 @@ Rare Bird Alert is a Raspberry Pi-based birdfeeder camera.
 ## Setup
 run `sudo raspi-config` and:
 + Enable camera
-+ Set pi GPU memory to at least 126mb (if we want to capture full resolution images with the HQ camera)
++ Set pi GPU memory to at least 128mb (if we want to capture full resolution images with the HQ camera)
 + set the hostname to birds (if desired)
 + Set up apache server
 + Set up reverse proxy main interface to {hostname}.local
