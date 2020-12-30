@@ -9,7 +9,6 @@ Rare Bird Alert is a Raspberry Pi-based birdfeeder camera.
 + scipy (numpy, matplotlib)
 + picamera
 + tensorflow (installed with instructions [here](https://raspberrypi.stackexchange.com/questions/107483/error-installing-tensorflow-cannot-find-libhdfs-so))
-+ func-timeout
 
 ## Setup
 run `sudo raspi-config` and:

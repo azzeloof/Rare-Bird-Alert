@@ -25,7 +25,7 @@ def rareBirdAlert():
     triggerOutput = StreamingOutput()
     mlShape = (224, 224)
     cameraController.startRecording(triggerOutput, mlShape, 'mjpeg', splitter_port=2)
-    mlDetector = MLTrigger(cameraController, triggerOutput, imageWidth=mlShape[0], imageHeight=mlShape[1], timeout=5)
+    mlDetector = MLTrigger(cameraController, triggerOutput, imageWidth=mlShape[0], imageHeight=mlShape[1], timeout=10)
     #cameraController.startRecording(os.devnull, (640, 480), 'h264', splitter_port=2, motion_output=motionDetector)
     try:
         initServer(webOutput, cameraController)

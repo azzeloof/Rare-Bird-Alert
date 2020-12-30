@@ -52,7 +52,7 @@ def countPics():
     Returns the number of still images saved in the stills directory
     """
     path = cameraController.getSettings('path')
-    return len([f for f in os.listdir(path)if os.path.isfile(os.path.join(path, f))])
+    return len([f for f in os.listdir(path) if (os.path.isfile(os.path.join(path, f)) and f != "Thumbs.db")])
 
 def getPicFilenames(start: int, end: int):
     """
@@ -62,6 +62,8 @@ def getPicFilenames(start: int, end: int):
     path = cameraController.getSettings('path')
     images = sorted(os.listdir(path))
     images.reverse()
+    if ("Thumbs.db" in images):
+        images.remove("Thumbs.db")
     if images != None:
         if start < len(images):
             if end < len(images):
