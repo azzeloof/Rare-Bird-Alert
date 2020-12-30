@@ -12,6 +12,25 @@ import picamera
 import time
 import json
 from PIL import Image
+from threading import Condition
+
+
+class StreamingOutput(object):
+    def __init__(self):
+        self.frame = None
+        self.buffer = io.BytesIO()
+        self.condition = Condition()
+
+    def write(self, buf):
+        if buf.startswith(b'\xff\xd8'):
+            # New frame, copy the existing buffer's content and notify all
+            # clients it's available
+            self.buffer.truncate()
+            with self.condition:
+                self.frame = self.buffer.getvalue()
+                self.condition.notify_all()
+            self.buffer.seek(0)
+        return self.buffer.write(buf)
 
 class CameraController():
     """
@@ -77,9 +96,13 @@ class CameraController():
         Retrieves the current frame and returns it as a PIL object
         """
         image = io.BytesIO()
-        self.camera.capture(image, format='jpeg', resize=(width, height), use_video_port=True)#, splitter_port=splitter_port)
-        image.flush()
-        image.seek(0) # set the read head at the start of the buffer
+        try:
+            self.camera.capture(image, format='jpeg', resize=(width, height), use_video_port=True)#, splitter_port=splitter_port)
+            image.flush()
+            image.seek(0) # set the read head at the start of the buffer
+        except Exception as e:
+            print(e)
+            return None
         output = Image.open(image)
         return output
 

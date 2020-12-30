@@ -6,12 +6,13 @@ Adam Zeloof
 This code is licenced under GNU GPLv3 (see LICENCE for details)
 """
 
-from webServer import StreamingOutput, StreamingServer, StreamingHandler, initServer
-from cameraController import CameraController
+from webServer import StreamingServer, StreamingHandler, initServer
+from cameraController import CameraController, StreamingOutput
 from motionTrigger import MotionDetector
 from mlTrigger import MLTrigger
 import io
 import os
+from func_timeout import func_timeout
 
 def rareBirdAlert():
     stillsPath = "/home/pi/stills" # Where will save captured still images
@@ -21,14 +22,19 @@ def rareBirdAlert():
     cameraController.startRecording(webOutput, (800, 600), 'mjpeg')
     #motionDetector = MotionDetector(cameraController.getCamera(), size=(640, 480))
     #motionDetector.start(cameraController)
-    mlDetector = MLTrigger(cameraController, timeout=5)
+    triggerOutput = StreamingOutput()
+    mlShape = (224, 224)
+    cameraController.startRecording(triggerOutput, mlShape, 'mjpeg', splitter_port=2)
+    mlDetector = MLTrigger(cameraController, triggerOutput, imageWidth=mlShape[0], imageHeight=mlShape[1], timeout=5)
     #cameraController.startRecording(os.devnull, (640, 480), 'h264', splitter_port=2, motion_output=motionDetector)
     try:
         initServer(webOutput, cameraController)
-        mlDetector.start()
+        #mlDetector.start()
         while True:
-            cameraController.camera.wait_recording(0)
+            cameraController.camera.wait_recording(mlDetector.getTimeout())
+            mlDetector.checkImage()
     finally:
+        #mlDetector.stop()
         cameraController.getCamera().close()
     #    cameraController.stopRecording()
     #    cameraController.stopRecording(splitter_port=2)
