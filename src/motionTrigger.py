@@ -21,10 +21,10 @@ class MotionDetector(PiMotionAnalysis):
     # motion data is in 16 px blocks
     # for 640x480, this means 41x30
     def analyse(self, a):
-        threshold = self.cameraObj.getSettings("motion_threshold")
-        sensitivity = self.cameraObj.getSettings("motion_sensitivity")
-        delay = self.cameraObj.getSettings("motion_delay")
-        timeout = self.cameraObj.getSettings("motion_timeout")
+        threshold = int(self.cameraObj.getSettings("motion_threshold"))
+        sensitivity = int(self.cameraObj.getSettings("motion_sensitivity"))
+        delay = int(self.cameraObj.getSettings("motion_delay"))
+        timeout = int(self.cameraObj.getSettings("motion_timeout"))
         a = np.sqrt(
             np.square(a['x'].astype(np.float)) +
             np.square(a['y'].astype(np.float))

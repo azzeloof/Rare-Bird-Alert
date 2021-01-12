@@ -1,1 +1,1 @@
-{"triggering": true, "path": "/home/pi/stills", "white_balance": "auto", "exposure": "sports", "brightness": "50", "motion_threshold": 60, "motion_sensitivity": 20, "motion_delay": 1, "motion_timeout": 5, "exposure_compensation": "6"}
+{"triggering": true, "path": "/home/pi/stills", "white_balance": "auto", "exposure": "sports", "brightness": "50", "motion_threshold": "60", "motion_sensitivity": "20", "motion_delay": "1", "motion_timeout": "5", "exposure_compensation": "0"}

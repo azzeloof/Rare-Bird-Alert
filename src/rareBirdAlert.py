@@ -9,7 +9,7 @@ This code is licenced under GNU GPLv3 (see LICENCE for details)
 from webServer import StreamingServer, StreamingHandler, initServer
 from cameraController import CameraController, StreamingOutput
 from motionTrigger import MotionDetector
-from mlTrigger import MLTrigger
+#from mlTrigger import MLTrigger
 import io
 import os
 from func_timeout import func_timeout
@@ -20,19 +20,20 @@ def rareBirdAlert():
     # high resolution and framerate required increasing pi GPU memory
     webOutput = StreamingOutput()
     cameraController.startRecording(webOutput, (800, 600), 'mjpeg')
-    #motionDetector = MotionDetector(cameraController.getCamera(), size=(640, 480))
-    #motionDetector.start(cameraController)
-    triggerOutput = StreamingOutput()
-    mlShape = (224, 224)
-    cameraController.startRecording(triggerOutput, mlShape, 'mjpeg', splitter_port=2)
-    mlDetector = MLTrigger(cameraController, triggerOutput, imageWidth=mlShape[0], imageHeight=mlShape[1], timeout=10)
-    #cameraController.startRecording(os.devnull, (640, 480), 'h264', splitter_port=2, motion_output=motionDetector)
+    motionDetector = MotionDetector(cameraController.getCamera(), size=(640, 480))
+    motionDetector.start(cameraController)
+    #triggerOutput = StreamingOutput()
+    #mlShape = (224, 224)
+    #cameraController.startRecording(triggerOutput, mlShape, 'mjpeg', splitter_port=2)
+    #mlDetector = MLTrigger(cameraController, triggerOutput, imageWidth=mlShape[0], imageHeight=mlShape[1], timeout=10)
+    cameraController.startRecording(os.devnull, (640, 480), 'h264', splitter_port=2, motion_output=motionDetector)
     try:
         initServer(webOutput, cameraController)
         #mlDetector.start()
         while True:
-            cameraController.camera.wait_recording(mlDetector.getTimeout())
-            mlDetector.checkImage()
+            #cameraController.camera.wait_recording(mlDetector.getTimeout())
+            cameraController.camera.wait_recording(0)
+            #mlDetector.checkImage()
     finally:
         #mlDetector.stop()
         cameraController.getCamera().close()

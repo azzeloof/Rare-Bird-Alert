@@ -40,9 +40,11 @@
                         document.getElementById("wb-select").value = cameraSettings["white_balance"];
                         document.getElementById("exposure-select").value = cameraSettings["exposure"];
                         if (cameraSettings["triggering"] == "true") {
-                            document.getElementById("toggle-motion").checked = true;
+                            //document.getElementById("toggle-motion").checked = true;
+                            $("#toggle-motion").bootstrapToggle("on");
                         } else {
-                            document.getElementById("toggle-motion").checked = false;
+                            //document.getElementById("toggle-motion").checked = false;
+                            $("#toggle-motion").bootstrapToggle("off");
                         };                        
                         document.getElementById("brightness-slider").value = cameraSettings["brightness"];
                         document.getElementById("brightness-label").innerHTML = "Brightness (" + cameraSettings["brightness"] + ")";
@@ -183,7 +185,16 @@
                             </div>
                             <div class="form-group text-center controls">
                                 <label for="toggle-motion">Motion Detection</label><br>
-                                <input class="form-check-input m-2" type="checkbox" id="toggle-motion" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+                                <!--<input class="form-check-input m-2" type="checkbox" id="toggle-motion" data-toggle="toggle" data-on="Enabled" data-off="Disabled">-->
+                                <input id="toggle-motion" type="checkbox">
+                                <script>
+                                    $(function() {
+                                        $('#toggle-motion').bootstrapToggle({
+                                            on: 'Enabled',
+                                            off: 'Disabled'
+                                        });
+                                    })
+                                </script>
                             </div>
                             <div class="form-group text-center controls">
                                 <label id="brightness-label" for="brightness-slider">Brightness</label>

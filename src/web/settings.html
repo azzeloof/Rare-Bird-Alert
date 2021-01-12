@@ -32,21 +32,21 @@
             };
             function sendSetting(setting, value) {
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "/live", true)
+                xhttp.open("POST", "/settings", true)
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send(setting + "=" + value);
                 return false;
             };
             function saveSettings() {
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "/live", true)
+                xhttp.open("POST", "/settings", true)
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send("saveSettings=do");
                 return false;
             };
             function loadSettings() {
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "/live", true)
+                xhttp.open("POST", "/settings", true)
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send("loadSettings=do");
                 getSettings();
@@ -54,7 +54,7 @@
             };
             function sendMotionSettings() {
                 sendSetting("motion_threshold", document.getElementById("motion-threshold").value);
-                sendSetting("motion_sensitivity", document.getElementById("motion-threshold").value);
+                sendSetting("motion_sensitivity", document.getElementById("motion-sensitivity").value);
                 sendSetting("motion_delay", document.getElementById("motion-delay").value);
                 sendSetting("motion_timeout", document.getElementById("motion-timeout").value);
             };
@@ -121,7 +121,7 @@
                             </div>
                             <div class="row">
                                 <div class="col text-center">
-                                    <button class="btn btn-outline-secondary control-button" onclick="sendMotionSettings()">Set Motion Parameters</button>
+                                    <button class="btn btn-outline-secondary control-button" type="button" onclick="sendMotionSettings()">Set Motion Parameters</button>
                                 </div>
                             </div>
                         </fieldset>
